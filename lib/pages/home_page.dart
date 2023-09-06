@@ -41,17 +41,30 @@ class _HomePageState extends State<HomePage> {
           onPressed: createNewTask,
           child: const Icon(Icons.add),
         ),
-        body: ListView.builder(
+        body: ReorderableListView.builder(
           itemCount: db.todoList.length,
           itemBuilder: (BuildContext context, int index) {
             return TodoTile(
+              key: ValueKey('$index'),
               taskName: db.todoList[index][0],
               isCompleted: db.todoList[index][1],
               onChanged: (value) => checkBoxChanged(value, index),
               deleteFunction: (context) => deleteTask(index),
             );
           },
+          onReorder: (oldIndex, newIndex) {
+          updateMyTiles(oldIndex, newIndex);
+        } ,
         ));
+  }
+  void updateMyTiles(int oldIndex, int newIndex) {
+    setState(() {
+      if (oldIndex < newIndex) {
+        newIndex -= 1;
+      }
+      final List<dynamic> movedItem = db.todoList.removeAt(oldIndex);
+      db.todoList.insert(newIndex, movedItem);
+    });
   }
 
   void checkBoxChanged(bool? value, int index) {
