@@ -6,6 +6,7 @@ class TodoTile extends StatelessWidget {
   final bool isCompleted;
   final Function(bool?)? onChanged;
   final Function(BuildContext)? deleteFunction;
+  final Function(BuildContext)? editFunction;
 
   const TodoTile({
     Key? key,
@@ -13,6 +14,7 @@ class TodoTile extends StatelessWidget {
     required this.isCompleted,
     required this.onChanged,
     required this.deleteFunction,
+    required this.editFunction,
   }) : super(key: key);
 
   @override
@@ -25,7 +27,7 @@ class TodoTile extends StatelessWidget {
           children: [
             SlidableAction(
               borderRadius: BorderRadius.circular(12),
-              onPressed: (con){},
+              onPressed: (con) {},
               icon: Icons.edit,
               backgroundColor: Colors.white70,
             )
@@ -39,13 +41,19 @@ class TodoTile extends StatelessWidget {
               onPressed: deleteFunction,
               icon: Icons.delete,
               backgroundColor: Colors.white70,
-            )
+            ),
+            SlidableAction(
+              borderRadius: BorderRadius.circular(12),
+              onPressed: editFunction,
+              icon: Icons.edit,
+              backgroundColor: Colors.white70,
+            ),
           ],
         ),
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-              color: Colors.purple[300],
+              color: isCompleted ? Colors.purple[300] : Colors.white70,
               borderRadius: BorderRadius.circular(12)),
           child: Row(
             children: [
@@ -57,7 +65,7 @@ class TodoTile extends StatelessWidget {
               Text(
                 taskName,
                 style: TextStyle(
-                  color: Colors.white,
+                  color:  isCompleted ? Colors.white : Colors.purple ,
                   decoration: isCompleted
                       ? TextDecoration.lineThrough
                       : TextDecoration.none,

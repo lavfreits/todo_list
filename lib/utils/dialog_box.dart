@@ -4,13 +4,15 @@ import 'my_button.dart';
 class DialogBox extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback onCancel;
+  final String? hintText;
   final VoidCallback onSave;
 
   const DialogBox({
-    Key? key, // Change super.key to Key? key
+    Key? key,
     required this.controller,
     required this.onCancel,
     required this.onSave,
+    required this.hintText,
   }) : super(key: key);
 
   @override
@@ -25,12 +27,12 @@ class DialogBox extends StatelessWidget {
             TextField(
               style: const TextStyle(color: Colors.white),
               controller: controller,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                 ),
-                hintText: 'Add a new task',
-                hintStyle: TextStyle(color: Colors.white),
+                hintText: hintText,
+                hintStyle: const TextStyle(color: Colors.white),
               ),
             ),
             const SizedBox(height: 5),

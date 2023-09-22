@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:todo_list/utils/month_summary.dart';
 
 import '../data/database.dart';
 import '../utils/dialog_box.dart';
@@ -41,22 +42,33 @@ class _HomePageState extends State<HomePage> {
           onPressed: createNewTask,
           child: const Icon(Icons.add),
         ),
-        body: ReorderableListView.builder(
-          itemCount: db.todoList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return TodoTile(
-              key: ValueKey('$index'),
-              taskName: db.todoList[index][0],
-              isCompleted: db.todoList[index][1],
-              onChanged: (value) => checkBoxChanged(value, index),
-              deleteFunction: (context) => deleteTask(index),
-            );
-          },
-          onReorder: (oldIndex, newIndex) {
-          updateMyTiles(oldIndex, newIndex);
-        } ,
+        body: ListView(
+          children: [
+            MonthlySummary(
+                datasets: db.heatMapDataSet,
+                startDate: _box.get("START_DATE")),
+            ReorderableListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: db.todoList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return TodoTile(
+                  key: ValueKey('$index'),
+                  taskName: db.todoList[index][0],
+                  isCompleted: db.todoList[index][1],
+                  onChanged: (value) => checkBoxChanged(value, index),
+                  deleteFunction: (context) => deleteTask(index),
+                  editFunction: (context) => editTask(index),
+                );
+              },
+              onReorder: (oldIndex, newIndex) {
+                updateMyTiles(oldIndex, newIndex);
+              },
+            ),
+          ],
         ));
   }
+
   void updateMyTiles(int oldIndex, int newIndex) {
     setState(() {
       if (oldIndex < newIndex) {
@@ -82,6 +94,7 @@ class _HomePageState extends State<HomePage> {
             controller: controller,
             onCancel: () => Navigator.of(context).pop(),
             onSave: saveNewTask,
+            hintText: 'Add a new task',
           );
         });
   }
@@ -101,7 +114,29 @@ class _HomePageState extends State<HomePage> {
 
   void deleteTask(int index) {
     setState(() {
-      db.todoList.removeAt(index);});
+      db.todoList.removeAt(index);
+    });
+    controller.clear();
     db.updateDatabase();
+  }
+
+  void editSavedTask(int index) {
+    setState(() {
+      db.todoList[index][0] = controller.text;
+    });
+    db.updateDatabase();
+  }
+
+  void editTask(int index) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return DialogBox(
+            controller: controller,
+            onCancel: () => Navigator.of(context).pop(),
+            onSave: () => editSavedTask(index),
+            hintText: db.todoList[index][0],
+          );
+        });
   }
 }
