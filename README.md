@@ -8,7 +8,7 @@ O aplicativo permite que os usuários criem, marquem como concluídas e excluam 
 O Hive é utilizado para armazenar os dados localmente de forma eficiente.
 Meus próximos passos são: implementar no calendário assinaturas de calor de acordo com as tarefas feitas, assim se todas as tarefas tiverem sido feitas naquele dia o dia deve ficar de uma cor escura se tiver feito só uma tarefa, fica um roxo clarinho e se não tiver feito nenhuma fica em branco.
 
-\
+
 ## Funcionalidades
 
 - Adicionar novas tarefas à lista.
